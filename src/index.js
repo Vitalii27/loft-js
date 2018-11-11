@@ -120,6 +120,13 @@ function deleteTextNodes(where) {
    должно быть преобразовано в <span><div><b></b></div><p></p></span>
  */
 function deleteTextNodesRecursive(where) {
+    for (var child of where.children) {
+        if (child.nodeType === 3) {
+            where.removeChild(child);
+            deleteTextNodesRecursive(where)
+        }
+
+    }
 }
 
 /*
@@ -142,8 +149,7 @@ function deleteTextNodesRecursive(where) {
      texts: 3
    }
  */
-function collectDOMStat(root) {
-}
+function collectDOMStat(root) {}
 
 /*
  Задание 8 *:
@@ -177,8 +183,7 @@ function collectDOMStat(root) {
      nodes: [div]
    }
  */
-function observeChildNodes(where, fn) {
-}
+function observeChildNodes(where, fn) {}
 
 export {
     createDivWithText,
