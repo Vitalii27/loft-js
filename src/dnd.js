@@ -16,6 +16,15 @@
    homeworkContainer.appendChild(newDiv);
  */
 const homeworkContainer = document.querySelector('#homework-container');
+//
+// let btn = document.querySelector('#addDiv'),
+//     newDiv = document.createElement('div');
+//
+//
+//
+// btn.addEventListener('click', () => {
+//     homeworkContainer.appendChild(newDiv);
+// });
 
 /*
  Функция должна создавать и возвращать новый div с классом draggable-div и случайными размерами/цветом/позицией
@@ -27,6 +36,26 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
+    const newDiv = document.createElement('div');
+    newDiv.classList.add('draggable-div');
+
+    const getRandomValue = max => {
+        return Math.floor(Math.random() * max);
+    };
+    const options = {
+        height: getRandomValue(400) + 'px',
+        width: getRandomValue(400) + 'px',
+        backgroundColor: `rgb(${getRandomValue(255)}, ${getRandomValue(255)}, ${getRandomValue(255)})`,
+        position: 'absolute',
+        top: getRandomValue(200) + 'px',
+        left: getRandomValue(200) + 'px',
+    };
+
+    for (let key in options) {
+        newDiv.style[key] = options[key];
+    }
+
+    return newDiv;
 }
 
 /*
@@ -38,11 +67,47 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
+    target.onmousedown = function (e) {
+
+        var coords = getCoords(target);
+        var shiftX = e.pageX - coords.left;
+        var shiftY = e.pageY - coords.top;
+
+        moveAt(e);
+
+        function moveAt(e) {
+            target.style.left = e.pageX - shiftX + 'px';
+            target.style.top = e.pageY - shiftY + 'px';
+        }
+
+        document.onmousemove = function (e) {
+            moveAt(e);
+        };
+
+        target.onmouseup = function () {
+            document.onmousemove = null;
+            target.onmouseup = null;
+        };
+
+    }
+
+    target.ondragstart = function () {
+        return false;
+    };
+
+    function getCoords(elem) {
+        var box = elem.getBoundingClientRect();
+
+        return {
+            top: box.top,
+            left: box.left
+        };
+    }
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
 
-addDivButton.addEventListener('click', function() {
+addDivButton.addEventListener('click', function () {
     // создать новый div
     const div = createDiv();
 
