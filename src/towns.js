@@ -113,7 +113,7 @@ filterInput.addEventListener('keyup', function () {
     }
 
     const filterTowns = arrayTowns.filter(town => {
-        isMatching(town.name, value)
+        return isMatching(town.name, value);
     });
 
     renderTowns(filterTowns)
