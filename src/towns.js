@@ -107,7 +107,7 @@ filterBlock.appendChild(listTowns)
 // console.log(towns)
 filterInput.addEventListener('keyup', function () {
     const value = filterInput.value;
-
+    listTowns.innerHTML = '';
     if (!value) {
         renderTowns(arrayTowns);
     }
