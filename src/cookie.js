@@ -47,44 +47,65 @@ function isMatching(full, chunk) {
     return full.toLowerCase().indexOf(chunk.toLowerCase()) > -1;
 }
 
-filterNameInput.addEventListener('keyup', function () {
-    // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
-    let cookies = document.cookie.split('; ');
-    let value = filterNameInput.value;
-    cookies.filter((cookie) => {
-        console.log(cookie.split('=')[0]);
-        return isMatching(cookie.split('=')[0], value);
-    })
-});
+let addCookie = () => {
+    return document.cookie = `${addNameInput.value}=${addValueInput.value}`;
+}
 
-addButton.addEventListener('click', () => {
-    // здесь можно обработать нажатие на кнопку "добавить cookie"
-    document.cookie = `${addNameInput.value}=${addValueInput.value}`;
-
-    let tr = document.createElement('tr');
-    listTable.appendChild(tr);
-
-    for (let i = 0; i <= 2; i++) {
-        let td = document.createElement('td');
-        tr.appendChild(td)
-        if (i == 0) {
-            td.innerHTML = addNameInput.value
-        } else if (i == 1) {
-            td.innerHTML = addValueInput.value
-        } else {
-            td.innerHTML = '<button class="btn" style="color:red;">REMOVE</button>'
-        }
-    }
-    let remove = listTable.querySelector('.btn')
-    remove.addEventListener('click', (e) => {
-
-        e.target.parentElement.parentElement.remove()
-    })
+let getCookie = () => {
     let objCoockie = document.cookie.split('; ').reduce((prev, current) => {
         const [name, value] = current.split('=')
         prev[name] = value;
         return prev;
     }, {});
+    return objCoockie;
+}
+
+let filterCookie = (value) => {
+    let cookies = document.cookie.split('; ');
+    cookies.filter((cookie) => {
+        return isMatching(cookie.split('=')[0], value);
+    })
+    return cookies;
+}
+
+let createTable = () => {
+    let row = document.createElement('tr');
+    listTable.appendChild(row);
+    let cookieNameTd = document.createElement('td');
+    cookieNameTd.innerText = addNameInput.value;
+    let cookieValueTd = document.createElement('td');
+    cookieValueTd.innerText = addValueInput.value;
+    let buttonTd = document.createElement('td');
+    buttonTd.innerHTML = '<button class="btn" style="color:red;">REMOVE</button>'
+    row.appendChild(cookieNameTd);
+    row.appendChild(cookieValueTd);
+    row.appendChild(buttonTd)
+
+    buttonTd.addEventListener('click' , () => {
+        row.remove()
+        console.log(document.cookie);
+    })
+}
+
+filterNameInput.addEventListener('keyup', function () {
+    // здесь можно обработать нажатия на клавиши внутри текстового поля для фильтрации cookie
+    getCookie()
+    filterCookie(filterNameInput.value);
+
+});
+
+addButton.addEventListener('click', () => {
+    // здесь можно обработать нажатие на кнопку "добавить cookie"
+
+    addCookie()
+    createTable()
+
+    // let remove = listTable.querySelector('.btn')
+    // remove.addEventListener('click', (e) => {
+    //
+    //     e.target.parentElement.parentElement.remove()
+    // })
+
     addNameInput.value = ''
     addValueInput.value = ''
 
